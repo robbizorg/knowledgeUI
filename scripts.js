@@ -124,9 +124,10 @@ function collideLine(object1, line) {
 		y2 = trans[1] + radius;
 	var obj2 = d3.select(line);
 
-	if (!(obj2.attr("x1") > x2 || obj2.attr("y1") > y2)) {
+	if ((obj2.attr("x1") > x1 || obj2.attr("x1") < x2) && (obj2.attr("y1") > y1 || obj2.attr("y1") < y2) ) {
+		console.log(obj)
 		colliding = "x1";
-	} else if (!(obj2.attr("x2") > x2 || obj2.attr("y2") > y2)) {
+	} else if ((obj2.attr("x2") > x1 || obj2.attr("x2") < x2) && (obj2.attr("y2") > y1 || obj2.attr("y2") < y2)) {
 		colliding = "x2";
 	}
 
