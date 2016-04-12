@@ -34,15 +34,25 @@ function dragmove(d) {
 }
 
 svg.on("click", function clickHandler() {
+	var radius = 20;
+
 	var x = d3.event.x;
 	var y = d3.event.y;
+	var x2 = x + radius;
+	var y2 = y + radius;
 
+	var nodes = d3.selectAll("node");
+
+	if (collideMouse(x, y, x2, y2, radius)) {
+
+	} else {
 	var g = svg.append("g")
 		.attr("transform", "translate(" + x + "," + y + ")")
 		.attr("id", "id" + counter)
+		.attr("class", "node")
 		.call(drag)
 		.append("circle").attr({
-			r: 20,
+			r: radius,
 		})
 		.style("fill", "#F00");
 
@@ -62,6 +72,24 @@ svg.on("click", function clickHandler() {
 
 		g1.moveToFront();
 		g2.moveToFront();		
+	}		
 	}
 
-}) 
+}); 
+
+function collideMouse(x, y, x2, y2, radius) {
+	var colliding = false;
+
+	d3.selectAll('.node').each(function(d, i) {
+		var trans = d3.transform(d3.select(this).attr("transform")).translate,
+			nx1 = trans[0],
+			nx2 = trans[0] + radius,
+			ny1 = trans[1],
+			ny2 = trans[1] + radius;
+
+		if (!(x > nx2 || x2 < nx1 || y > ny2 || y2 < ny1))
+			colliding = true; 
+	}) 
+
+	return colliding;
+}
