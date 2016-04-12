@@ -2,6 +2,7 @@ var svg = d3.select("body")
 	.append("svg")
 	.attr("width", 700)
 	.attr("height", 500)
+	.attr("id", "svg1");
 
 var drag = d3.behavior.drag()
 	.on("dragstart", function dragHandler() {
@@ -47,3 +48,17 @@ function dragmove(d) {
 		line.attr("y2", y);
 	}
 }
+
+svg.on("click", function clickHandler() {
+	var x = d3.event.x;
+	var y = d3.event.y;
+
+	svg.append("g")
+		.attr("transform", "translate(" + x + "," + y + ")")
+		.attr("class", "first")
+		.call(drag)
+		.append("circle").attr({
+			r: 20,
+		})
+		.style("fill", "#F00");
+}) 
