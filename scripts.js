@@ -4,14 +4,15 @@ d3.selection.prototype.moveToFront = function() {
   });
 };
 
-var svg = d3.select("body")
+var svg = d3.select("#drawArea")
 	.append("svg")
 	.attr("width", 700)
 	.attr("height", 500)
 	.attr("id", "svg1");
 
 var counter = 0;
-var circles = [];
+var connections = [];
+var radius = 20;
 
 var drag = d3.behavior.drag()
 	.on("dragstart", function dragHandler() {
@@ -23,18 +24,24 @@ function dragmove(d) {
 	var x = d3.event.x;
 	var y = d3.event.y;
 	d3.select(this).attr("transform", "translate(" + x + "," + y +")");
+	var selected = this;
 
-	if (d3.select(this).attr("class") == "first") {
-		line.attr("x1", x);
-		line.attr("y1", y);
-	} else {
-		line.attr("x2", x);
-		line.attr("y2", y);
-	}
+	d3.selectAll(".line").each(function (d, i) {
+		if (collideLine(selected, this) == "x1") {
+			d3.select(this).attr("x1", x);
+			d3.select(this).attr("y1", y);
+		} else if (collideLine(selected, this) == "x2") {
+			d3.select(this).attr("x2", x);
+			d3.select(this).attr("y2", y);
+		}
+
+	}); 
+		//line.attr("x1", x);
+		//line.attr("y1", y);
+
 }
 
 svg.on("click", function clickHandler() {
-	var radius = 20;
 
 	var x = d3.event.x;
 	var y = d3.event.y;
@@ -65,13 +72,17 @@ svg.on("click", function clickHandler() {
 	
 		var line = svg.append("line")
 			.style("stroke", "black")
+			.attr("id", "line" + (counter - 2))
+			.attr("class", "line")
 			.attr("x1", d3.transform(g1.attr("transform")).translate[0])
 			.attr("y1", d3.transform(g1.attr("transform")).translate[1])
 			.attr("x2", d3.transform(g2.attr("transform")).translate[0])
 			.attr("y2", d3.transform(g2.attr("transform")).translate[1]);
 
 		g1.moveToFront();
-		g2.moveToFront();		
+		g2.moveToFront();
+
+		connections.push([g1, g2, line]);		
 	}
 
 	d3.selectAll('.node').on("mouseenter", function() {
@@ -101,4 +112,24 @@ function collideMouse(x, y, x2, y2, radius) {
 	}) 
 
 	return colliding;
+}
+
+function collideLine(object1, line) {
+	var colliding = "";
+
+	var trans = d3.transform(d3.select(object1).attr("transform")).translate,
+		x1 = trans[0],
+		x2 = trans[0] + radius,
+		y1 = trans[1],
+		y2 = trans[1] + radius;
+	var obj2 = d3.select(line);
+
+	if (!(obj2.attr("x1") > x2 || obj2.attr("y1") > y2)) {
+		colliding = "x1";
+	} else if (!(obj2.attr("x2") > x2 || obj2.attr("y2") > y2)) {
+		colliding = "x2";
+	}
+
+	return colliding;
+
 }
