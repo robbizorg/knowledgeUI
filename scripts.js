@@ -54,7 +54,7 @@ svg.on("click", function clickHandler() {
 		.append("circle").attr({
 			r: radius,
 		})
-		.style("fill", "#F00");
+		.style("fill", "#3333ff");
 
 	counter++;
 
@@ -72,7 +72,16 @@ svg.on("click", function clickHandler() {
 
 		g1.moveToFront();
 		g2.moveToFront();		
-	}		
+	}
+
+	d3.selectAll('.node').on("mouseenter", function() {
+		d3.select(this).style("stroke", "#ff33ff");
+		d3.select(this).style("stroke-width", 3);
+	});
+
+	d3.selectAll('.node').on("mouseleave", function() {
+		d3.select(this).style("stroke", "none");
+	});					
 	}
 
 }); 
