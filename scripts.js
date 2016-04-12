@@ -1,3 +1,9 @@
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
+
 var svg = d3.select("body")
 	.append("svg")
 	.attr("width", 700)
@@ -33,26 +39,29 @@ svg.on("click", function clickHandler() {
 
 	var g = svg.append("g")
 		.attr("transform", "translate(" + x + "," + y + ")")
-		.attr("class", "first")
+		.attr("id", "id" + counter)
 		.call(drag)
 		.append("circle").attr({
 			r: 20,
 		})
 		.style("fill", "#F00");
 
-	circles.push(g);
+	counter++;
 
-	if (circles.length > 1) {
-		var g1 = circles[circles.length - 2];
-		var g2 = circles[circles.length - 1];
-		console.log(g1.attr("width"));
+	if (counter > 1) {
+		var g1 = d3.select("#id" + (counter - 2));
+		var g2 = d3.select("#id" + (counter - 1));
+
 	
 		var line = svg.append("line")
 			.style("stroke", "black")
-			.attr("x1", g1.attr("width"))
-			.attr("y1", g1.attr("height"))
-			.attr("x2", g2.attr("width"))
-			.attr("y2", g2.attr("height"));		
+			.attr("x1", d3.transform(g1.attr("transform")).translate[0])
+			.attr("y1", d3.transform(g1.attr("transform")).translate[1])
+			.attr("x2", d3.transform(g2.attr("transform")).translate[0])
+			.attr("y2", d3.transform(g2.attr("transform")).translate[1]);
+
+		g1.moveToFront();
+		g2.moveToFront();		
 	}
 
 }) 
