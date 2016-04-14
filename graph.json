@@ -1,0 +1,19 @@
+{
+ "name": "Data Structures and Algorithms",
+ "children": [
+  {
+   "name": "Data Structures",
+   "children": [
+    {
+     "name": "Lists",
+     "children": [
+      {"name": "ArrayList", "size": 3938},
+      {"name": "LinkedList", "size": 3812},
+      {"name": "HierarchicalCluster", "size": 6714},
+      {"name": "MergeEdge", "size": 743}
+     ]
+    }
+   ]
+  }
+ ]
+}
