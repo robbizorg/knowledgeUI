@@ -75,6 +75,9 @@ var link = svg.selectAll(".link"),
         ]
       }
     ],
+    "connections": [
+      {"name": "Data Structures"}
+    ]
     "size": 7500
   }
  ],
@@ -158,6 +161,7 @@ function flatten(root) {
     if (node.children) node.children.forEach(recurse);
     if (!node.id) node.id = ++i;
     nodes.push(node);
+    if (node.connections) node.connections.for
   }
 
   recurse(root);
