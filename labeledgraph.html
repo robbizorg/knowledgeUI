@@ -20,21 +20,15 @@
 
 </style>
 <body>
+<div style="position: absolute;">
+  Name:<br>
+  <input id="name" type="text" name="name"><br>
+  Connections:<br>
+  <input id="connections" type="text" name="connections">
+  <button onClick="addNode()">Add Node</button>
+</div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-
-var width = 960,
-    height = 500
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-
-var force = d3.layout.force()
-    .gravity(0.05)
-    .distance(100)
-    .charge(-100)
-    .size([width, height]);
 
 var graph = {
   "nodes": [
@@ -55,6 +49,20 @@ var graph = {
     {"source":6,"target":2,"value":1}
   ]
 };
+
+
+var width = 960,
+    height = 500
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var force = d3.layout.force()
+    .gravity(0.05)
+    .distance(100)
+    .charge(-100)
+    .size([width, height]);
 
   force
       .nodes(graph.nodes)
@@ -89,4 +97,32 @@ var graph = {
     node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
   });
 
+function addNode() {
+  var newNode = document.getElementById("name").value;
+  console.log(newNode);
+  //var connections = document.getElementById("connections").split(",");
+
+  graph.nodes[graph.nodes.length] = {"name": newNode};
+  console.log(graph.nodes);
+
+  force
+      .nodes(graph.nodes)
+      .links(graph.links)
+      .start();
+
+
+  var node = svg.selectAll(".node")
+      .data(graph.nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .call(force.drag);
+
+  node.append("circle")
+    .attr('r', width/100);
+
+  node.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.name });
+}
 </script>
